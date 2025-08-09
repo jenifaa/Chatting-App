@@ -7,21 +7,17 @@ import java.awt.Image;
 import java.util.*;
 import javax.swing.*;
 import java.text.*;
-import java.net.*;
-import java.io.*;
-public class Server  implements ActionListener{
-	static JFrame f = new JFrame();
+public class Client extends JFrame implements ActionListener{
 	JTextField text;
 	JPanel x;
-	static Box vertical = Box.createVerticalBox() ;
-	static DataOutputStream dout;
-	Server(){
-		f.setLayout(null);
+	Box vertical = Box.createVerticalBox() ;
+	Client(){
+		setLayout(null);
 		JPanel p1 = new JPanel();
 		p1.setBackground(new Color(7,94,84));
 		p1.setBounds(0,0,450,70);
 		p1.setLayout(null);
-		f.add(p1);
+		add(p1);
 		
 		
 		//arrow image
@@ -43,8 +39,8 @@ public class Server  implements ActionListener{
 		});
 		
 		//profile img
-		ImageIcon i4 = new ImageIcon("C:\\Users\\jefra\\git\\repository3\\Chatting-App\\src\\icons/girl.png");
-		Image i5 = i4.getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT);
+		ImageIcon i4 = new ImageIcon("C:\\Users\\jefra\\git\\repository3\\Chatting-App\\src\\icons/man.png");
+		Image i5 = i4.getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 		ImageIcon i6 = new ImageIcon(i5);
 		
 		JLabel profile = new JLabel(i6);
@@ -75,9 +71,9 @@ public class Server  implements ActionListener{
 		
 		ImageIcon d = new ImageIcon("C:\\Users\\jefra\\git\\repository3\\Chatting-App\\src\\icons/mr.png");
 		Image e = d.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
-		ImageIcon m = new ImageIcon(e);
+		ImageIcon f = new ImageIcon(e);
 		
-		JLabel more = new JLabel(m);
+		JLabel more = new JLabel(f);
 		
 		more.setBounds(400,20,25,25);
 		p1.add(more);
@@ -87,7 +83,7 @@ public class Server  implements ActionListener{
 		
 		//user name
 		
-		JLabel name = new JLabel("Jenifaa");
+		JLabel name = new JLabel("Chips");
 		name.setBounds(90,15,100,20);
 		name.setForeground(Color.WHITE);
 		name.setFont(new Font("SAN_SERIF",Font.BOLD,16));
@@ -107,14 +103,14 @@ public class Server  implements ActionListener{
 		
 		 x = new JPanel();
 		x.setBounds(5,75,440,570);
-		f.add(x);
+		add(x);
 		
 		//making textField
 		
 		 text =  new JTextField();
 		text.setBounds(5,655,310,40);
 		text.setFont(new Font("SAN_SERIF",Font.BOLD,16));
-		f.add(text);
+		add(text);
 		
 		// send button
 		
@@ -125,7 +121,7 @@ public class Server  implements ActionListener{
 		send.addActionListener(this);
 		
 		
-		f.add(send);
+		add(send);
 		
 		
 		//send button work function
@@ -133,38 +129,34 @@ public class Server  implements ActionListener{
 		
 		
 		
-		f.setSize(450,700);
+		setSize(450,700);
 		
-		f.setLocation(200,50);
-		f.setUndecorated(true);
-		f.getContentPane().setBackground(Color.WHITE);
+		setLocation(800,50);
+		setUndecorated(true);
+		getContentPane().setBackground(Color.WHITE);
 //		getContentPane().setBackground(Color.BLACK);
-		f.setVisible(true);
+		setVisible(true);
 	}
+	
+	
 	public void actionPerformed(ActionEvent ae) {
-		try {
-			String out = text.getText();
-			JLabel output = new JLabel(out);
-			JPanel p2 =  formatLabel(out);
-//			p2.add(output);
-			x.setLayout(new BorderLayout());
-			JPanel right = new JPanel(new BorderLayout());
-			
-			right.add(p2,BorderLayout.LINE_END);
-			
-			
-			vertical.add(right);
-			vertical.add(Box.createVerticalStrut(15));
-			x.add(vertical,BorderLayout.PAGE_START);
-			dout.writeUTF(out);
-			text.setText("");
-			f.repaint();
-			f.invalidate();
-			f.validate();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		String out = text.getText();
+		JLabel output = new JLabel(out);
+		JPanel p2 =  formatLabel(out);
+//		p2.add(output);
+		x.setLayout(new BorderLayout());
+		JPanel right = new JPanel(new BorderLayout());
 		
+		right.add(p2,BorderLayout.LINE_END);
+		
+		vertical.add(right);
+		vertical.add(Box.createVerticalStrut(15));
+		x.add(vertical,BorderLayout.PAGE_START);
+		
+		text.setText("");
+		repaint();
+		invalidate();
+		validate();
 		}
 	
 	public static JPanel formatLabel(String out) {
@@ -192,26 +184,6 @@ public class Server  implements ActionListener{
 		
 	}
 public static void main(String[] args) {
-	new Server();
-	try{
-		ServerSocket skt = new ServerSocket(6001);
-		while(true){
-		Socket s =	skt.accept();
-		DataInputStream din = new DataInputStream(s.getInputStream());
-		 dout = new DataOutputStream(s.getOutputStream());
-		
-		while(true) {
-			String msg = din.readUTF();
-			JPanel panel = formatLabel(msg);
-			JPanel left = new JPanel(new BorderLayout());
-			left.add(panel,BorderLayout.LINE_START);
-			vertical.add(left);
-			f.validate();
-		}
-;		}
-	}
-	catch(Exception e){
-		e.printStackTrace();
-	}
+	new Client();
 }
 }
