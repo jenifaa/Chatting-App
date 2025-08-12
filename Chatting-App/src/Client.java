@@ -3,21 +3,27 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.*;
+import java.net.Socket;
 import java.awt.Image;
 import java.util.*;
 import javax.swing.*;
 import java.text.*;
-public class Client extends JFrame implements ActionListener{
+import java.io.*;
+public class Client  implements ActionListener{
 	JTextField text;
-	JPanel x;
-	Box vertical = Box.createVerticalBox() ;
+	static JPanel x;
+	static Box vertical = Box.createVerticalBox() ;
+	static JFrame f = new JFrame();
+	static DataOutputStream dout;
+	static Socket cl;
+	static DataInputStream din;
 	Client(){
-		setLayout(null);
+		f.setLayout(null);
 		JPanel p1 = new JPanel();
-		p1.setBackground(new Color(7,94,84));
+		p1.setBackground(Color.BLACK);
 		p1.setBounds(0,0,450,70);
 		p1.setLayout(null);
-		add(p1);
+		f.add(p1);
 		
 		
 		//arrow image
@@ -71,9 +77,9 @@ public class Client extends JFrame implements ActionListener{
 		
 		ImageIcon d = new ImageIcon("C:\\Users\\jefra\\git\\repository3\\Chatting-App\\src\\icons/mr.png");
 		Image e = d.getImage().getScaledInstance(25, 25, Image.SCALE_DEFAULT);
-		ImageIcon f = new ImageIcon(e);
+		ImageIcon k = new ImageIcon(e);
 		
-		JLabel more = new JLabel(f);
+		JLabel more = new JLabel(k);
 		
 		more.setBounds(400,20,25,25);
 		p1.add(more);
@@ -103,25 +109,25 @@ public class Client extends JFrame implements ActionListener{
 		
 		 x = new JPanel();
 		x.setBounds(5,75,440,570);
-		add(x);
+		f.add(x);
 		
 		//making textField
 		
 		 text =  new JTextField();
 		text.setBounds(5,655,310,40);
 		text.setFont(new Font("SAN_SERIF",Font.BOLD,16));
-		add(text);
+		f.add(text);
 		
 		// send button
 		
 		JButton send = new JButton("Send");
 		send.setBounds(320,655,123,40);
-		send.setBackground(new Color(7,94,84));
+		send.setBackground(Color.BLACK);
 		send.setForeground(Color.WHITE);
 		send.addActionListener(this);
 		
 		
-		add(send);
+		f.add(send);
 		
 		
 		//send button work function
@@ -129,34 +135,71 @@ public class Client extends JFrame implements ActionListener{
 		
 		
 		
-		setSize(450,700);
+		f.setSize(450,700);
 		
-		setLocation(800,50);
-		setUndecorated(true);
-		getContentPane().setBackground(Color.WHITE);
-//		getContentPane().setBackground(Color.BLACK);
-		setVisible(true);
+		f.setLocation(800,50);
+		f.setUndecorated(true);
+		f.getContentPane().setBackground(Color.WHITE);
+//		f.getContentPane().setBackground(Color.BLACK);
+		f.setVisible(true);
 	}
 	
 	
+	
+	 public void startClient() {
+	        new Thread(() -> {
+	            try {
+	                cl = new Socket("127.0.0.1", 6002);
+	                din = new DataInputStream(cl.getInputStream());
+	                dout = new DataOutputStream(cl.getOutputStream());
+
+	                while (true) {
+	                    String msg = din.readUTF();
+
+	                    JPanel panel = formatLabel(msg);
+	                    JPanel left = new JPanel(new BorderLayout());
+	                    left.add(panel, BorderLayout.LINE_START);
+	                    vertical.add(left);
+	                    vertical.add(Box.createVerticalStrut(15));
+	                    x.add(vertical, BorderLayout.PAGE_START);
+
+	                    f.validate();
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }).start();
+	    }
+	
+	
+	
 	public void actionPerformed(ActionEvent ae) {
-		String out = text.getText();
-		JLabel output = new JLabel(out);
-		JPanel p2 =  formatLabel(out);
-//		p2.add(output);
-		x.setLayout(new BorderLayout());
-		JPanel right = new JPanel(new BorderLayout());
+		try {
+			String out = text.getText();
+			JLabel output = new JLabel(out);
+			JPanel p2 =  formatLabel(out);
+//			p2.add(output);
+			x.setLayout(new BorderLayout());
+			
+			JPanel right = new JPanel(new BorderLayout());
+			
+			right.add(p2,BorderLayout.LINE_END);
+			
+			vertical.add(right);
+			vertical.add(Box.createVerticalStrut(15));
+			x.add(vertical,BorderLayout.PAGE_START);
+			
+			dout.writeUTF(out);
+			
+			
+			text.setText("");
+			f.repaint();
+			f.invalidate();
+			f.validate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		
-		right.add(p2,BorderLayout.LINE_END);
-		
-		vertical.add(right);
-		vertical.add(Box.createVerticalStrut(15));
-		x.add(vertical,BorderLayout.PAGE_START);
-		
-		text.setText("");
-		repaint();
-		invalidate();
-		validate();
 		}
 	
 	public static JPanel formatLabel(String out) {
@@ -166,7 +209,8 @@ public class Client extends JFrame implements ActionListener{
 		JLabel output = new JLabel("<html><p style=\"width:150px   \">" + out + "</p></html>");
 		
 		output.setFont(new Font("Tahoma", Font.PLAIN,16));
-		output.setBackground(new Color(37,211,102));
+		output.setForeground(Color.WHITE);
+		output.setBackground(Color.BLACK);
 		output.setOpaque(true);
 		output.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 50)); 
 		
@@ -184,6 +228,30 @@ public class Client extends JFrame implements ActionListener{
 		
 	}
 public static void main(String[] args) {
-	new Client();
+//	new Client();
+//	try {
+//		Socket cl = new Socket("127.0.0.1",6002);
+//		
+//		DataInputStream din = new DataInputStream(cl.getInputStream());
+//		 dout = new DataOutputStream(cl.getOutputStream());
+//		 while(true) {
+//			  x.setLayout(new BorderLayout());
+//				String msg = din.readUTF();
+//				JPanel panel = formatLabel(msg);
+//				JPanel left = new JPanel(new BorderLayout());
+//				left.add(panel,BorderLayout.LINE_START);
+//				vertical.add(left);
+//				vertical.add(Box.createVerticalStrut(15));
+//				x.add(vertical,BorderLayout.PAGE_START);
+//				
+//				f.validate();
+//			}
+//	} catch(Exception e) {
+//		e.printStackTrace();
+//	}
+	
+	
+	 Client client = new Client();
+     client.startClient();
 }
 }

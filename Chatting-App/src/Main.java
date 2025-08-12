@@ -2,7 +2,9 @@
 public class Main {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		IDandPasswords  idandpasswords = new IDandPasswords();
+	
+		Login loginPage = new Login(idandpasswords.getLoginInfo());
 
 	}
 
