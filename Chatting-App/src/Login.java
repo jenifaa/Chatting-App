@@ -97,8 +97,10 @@ public class Login implements ActionListener{
 				 		messageLabel.setForeground(Color.GREEN);
 				 		messageLabel.setText("Login Successfull");
 				 		frame.dispose();
-				 		Server serverPage = new Server(userID);
+				 		Server serverPage = new Server(null);
+				 		
 				 		  serverPage.startServer();
+	
 				 		  
 	
 				 	}

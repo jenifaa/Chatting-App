@@ -97,8 +97,14 @@ public class Clientlogin implements ActionListener{
 				 		messageLabel.setForeground(Color.GREEN);
 				 		messageLabel.setText("Login Successfull");
 				 		frame.dispose();
+				 		
+				 		
+				 		
 				 		 Client clientPage = new Client();
+				 		
+				 	
 				 	    clientPage.startClient();
+				 	 
 				 	}
 				 	else {
 				 		messageLabel.setForeground(Color.red);

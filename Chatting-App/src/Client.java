@@ -17,7 +17,14 @@ public class Client  implements ActionListener{
 	static DataOutputStream dout;
 	static Socket cl;
 	static DataInputStream din;
+	
+	
+//	  static JScrollPane scrollPane;
+	
 	Client(){
+		
+		
+		
 		f.setLayout(null);
 		JPanel p1 = new JPanel();
 		p1.setBackground(Color.BLACK);
@@ -89,7 +96,7 @@ public class Client  implements ActionListener{
 		
 		//user name
 		
-		JLabel name = new JLabel("Chips");
+		JLabel name = new JLabel("Hello");
 		name.setBounds(90,15,100,20);
 		name.setForeground(Color.WHITE);
 		name.setFont(new Font("SAN_SERIF",Font.BOLD,16));
@@ -107,8 +114,15 @@ public class Client  implements ActionListener{
 		
 		//panel for chat
 		
-		 x = new JPanel();
-		x.setBounds(5,75,440,570);
+		x = new JPanel();
+//		x.setLayout(new BorderLayout());
+		x.setBounds(5, 75, 440, 570);
+
+		
+//		scrollPane = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//		scrollPane.setBorder(null);
+//		x.add(scrollPane, BorderLayout.CENTER);
+
 		f.add(x);
 		
 		//making textField
@@ -152,6 +166,8 @@ public class Client  implements ActionListener{
 	                cl = new Socket("127.0.0.1", 6002);
 	                din = new DataInputStream(cl.getInputStream());
 	                dout = new DataOutputStream(cl.getOutputStream());
+	                
+	              
 
 	                while (true) {
 	                    String msg = din.readUTF();
@@ -161,7 +177,12 @@ public class Client  implements ActionListener{
 	                    left.add(panel, BorderLayout.LINE_START);
 	                    vertical.add(left);
 	                    vertical.add(Box.createVerticalStrut(15));
+	                    
+	                    
 	                    x.add(vertical, BorderLayout.PAGE_START);
+//	                    SwingUtilities.invokeLater(() -> {
+//	                        scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+//	                    });
 
 	                    f.validate();
 	                }
@@ -187,7 +208,14 @@ public class Client  implements ActionListener{
 			
 			vertical.add(right);
 			vertical.add(Box.createVerticalStrut(15));
+			
+		
 			x.add(vertical,BorderLayout.PAGE_START);
+			
+//			SwingUtilities.invokeLater(() -> {
+//			    scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+//			});
+			
 			
 			dout.writeUTF(out);
 			
@@ -228,27 +256,6 @@ public class Client  implements ActionListener{
 		
 	}
 public static void main(String[] args) {
-//	new Client();
-//	try {
-//		Socket cl = new Socket("127.0.0.1",6002);
-//		
-//		DataInputStream din = new DataInputStream(cl.getInputStream());
-//		 dout = new DataOutputStream(cl.getOutputStream());
-//		 while(true) {
-//			  x.setLayout(new BorderLayout());
-//				String msg = din.readUTF();
-//				JPanel panel = formatLabel(msg);
-//				JPanel left = new JPanel(new BorderLayout());
-//				left.add(panel,BorderLayout.LINE_START);
-//				vertical.add(left);
-//				vertical.add(Box.createVerticalStrut(15));
-//				x.add(vertical,BorderLayout.PAGE_START);
-//				
-//				f.validate();
-//			}
-//	} catch(Exception e) {
-//		e.printStackTrace();
-//	}
 	
 	
 	 Client client = new Client();

@@ -18,9 +18,11 @@ public class Server  implements ActionListener{
 	static Box vertical = Box.createVerticalBox() ;
 	static DataOutputStream dout;
 	
-
+//	  static JScrollPane scrollPane;
 	
 	Server(String userID){
+		
+		
 		f.setLayout(null);
 		JPanel p1 = new JPanel();
 //		p1.setBackground(new Color(7,94,84));
@@ -112,8 +114,19 @@ public class Server  implements ActionListener{
 		//panel for chat
 		
 		 x = new JPanel();
+//		 x.setLayout(new BorderLayout());
 		x.setBounds(5,75,440,570);
-		f.add(x);
+		
+//		f.add(x);
+		
+		
+		//scrollbar
+		
+//		 scrollPane = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+//	        scrollPane.setBorder(null);
+//	        x.add(scrollPane, BorderLayout.CENTER);
+	        f.add(x);
+	        
 		
 		//making textField
 		
@@ -163,6 +176,8 @@ public class Server  implements ActionListener{
 	                    Socket s = skt.accept();
 	                    DataInputStream din = new DataInputStream(s.getInputStream());
 	                    dout = new DataOutputStream(s.getOutputStream());
+	                    
+	                 
 
 	                    // Enable send button when client connects
 //	                    SwingUtilities.invokeLater(() -> server.send.setEnabled(true));
@@ -173,6 +188,13 @@ public class Server  implements ActionListener{
 	                        JPanel left = new JPanel(new BorderLayout());
 	                        left.add(panel, BorderLayout.LINE_START);
 	                        vertical.add(left);
+	                        
+	                        //auto scroll add
+//	                        SwingUtilities.invokeLater(() -> {
+//	                            scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+//	                        });
+	                        
+	                        
 	                        f.validate();
 	                    }
 	                }
@@ -200,6 +222,13 @@ public class Server  implements ActionListener{
 			
 			vertical.add(right);
 			vertical.add(Box.createVerticalStrut(15));
+			
+			
+			//scrollbar for send msg
+//			  SwingUtilities.invokeLater(() -> {
+//	                scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
+//	            });
+			
 			x.add(vertical,BorderLayout.PAGE_START);
 			dout.writeUTF(out);
 			text.setText("");
@@ -238,32 +267,7 @@ public class Server  implements ActionListener{
 		
 	}
 	
-	
-//	
-//public static void main(String[] args) {
-//	new Server();
-//	try{
-//		ServerSocket skt = new ServerSocket(6001);
-//		while(true){
-//		Socket s =	skt.accept();
-//		DataInputStream din = new DataInputStream(s.getInputStream());
-//		 dout = new DataOutputStream(s.getOutputStream());
-//		
-//		while(true) {
-//			String msg = din.readUTF();
-//			JPanel panel = formatLabel(msg);
-//			JPanel left = new JPanel(new BorderLayout());
-//			left.add(panel,BorderLayout.LINE_START);
-//			vertical.add(left);
-//			f.validate();
-//		}
-//	}
-//	}
-//	catch(Exception e){
-//		e.printStackTrace();
-//	}
-//}
-	
+
 	
 	 public static void main(String[] args) {
 	        Server server = new Server(null);
