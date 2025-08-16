@@ -1,128 +1,118 @@
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.HashMap;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import org.bson.Document;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+public class Clientlogin implements ActionListener {
+    JFrame frame = new JFrame();
 
-public class Clientlogin implements ActionListener{
-	JFrame frame = new JFrame();
-	
-	
-	
-	
-	JButton loginButton = new JButton("Login");
-	
-	JButton resetButton = new JButton("Reset");
-	JTextField userIDField = new JTextField();
-	JPasswordField userPasswordField = new JPasswordField();
-	JLabel userIDLabel = new JLabel("userID:");
-	JLabel userPasswordLabel = new JLabel("Password:");
-	
-	JLabel messageLabel = new JLabel();
-	
-	HashMap<String,String> logininfoClient = new HashMap<String,String>();
-	
-        Clientlogin(HashMap<String,String> loginInfoOriginal){
-        	logininfoClient = loginInfoOriginal;
-        	
-        	userIDLabel.setBounds(50,100,75,25);
-        	userPasswordLabel.setBounds(50,150,75,25);
-        	
-        	
-        	messageLabel.setBounds(125,250,250,35);
-        	messageLabel.setFont(new Font(null,Font.ITALIC,25));
-        	
-        	userIDField.setBounds(125,100,200,25);
-        	userPasswordField.setBounds(125,150,200,25);
-        	
-        	loginButton.setBounds(125,200,100,25);
-        	loginButton.setFocusable(false);
-        	loginButton.addActionListener(this);
-        	
-        	
-        	
-        	resetButton.setBounds(225,200,100,25);
-        	resetButton.setFocusable(false);
-        	resetButton.addActionListener(this);
-        	
-        	JPanel p1 = new JPanel();
-//    		p1.setBackground(new Color(7,94,84));
-    		p1.setBackground(new Color(0, 50, 0));
-    		p1.setBounds(0,0,450,70);
-    		p1.setLayout(null);
-    		frame.add(p1);
-    		
-        	frame.add(userIDLabel);
-        	frame.add(userPasswordLabel);
-        	frame.add(messageLabel);
-        	frame.add(userIDField);
-        	frame.add(userPasswordField);
-        	frame.add(loginButton);
-        	frame.add(resetButton);
-        	
-        	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        	frame.setSize(450,700);
-        	frame.setLocation(700,50);
-        	frame.setLayout(null);
-        	frame.setVisible(true);
-        	
-        	
-        	
-        }
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			if(e.getSource() == resetButton) {
-			  userIDField.setText("");
-			  userPasswordField.setText("");	
-			}
-			
-			if(e.getSource() == loginButton) {
-				String userID = userIDField.getText();
-				String password = String.valueOf(userPasswordField.getPassword());
-				
-				if(logininfoClient.containsKey(userID)) {
-				 	if(logininfoClient.get(userID).equals(password)) {
-				 		messageLabel.setForeground(Color.GREEN);
-				 		messageLabel.setText("Login Successfull");
-				 		frame.dispose();
-				 		
-				 		
-				 		
-				 		 Client clientPage = new Client();
-				 		
-				 	
-				 	    clientPage.startClient();
-				 	 
-				 	}
-				 	else {
-				 		messageLabel.setForeground(Color.red);
-				 		messageLabel.setText("Wrong Password");
-				 	}
-				}
-				
-				else {
-				
-					messageLabel.setForeground(Color.red);
-			 		messageLabel.setText("UserName Not Found");
-					
-				}
-				
-				
-				
-				
-				}
-			
-		}
+    JButton loginButton = new JButton("Login");
+    JButton resetButton = new JButton("Reset");
+    JButton registerButton = new JButton("Register");
+
+    JTextField userIDField = new JTextField();
+    JPasswordField userPasswordField = new JPasswordField();
+
+    JLabel userIDLabel = new JLabel("Username/Email:");
+    JLabel userPasswordLabel = new JLabel("Password:");
+    JLabel messageLabel = new JLabel();
+
+    public Clientlogin() {
+    	
+        userIDLabel.setBounds(50, 100, 120, 25);
+        userPasswordLabel.setBounds(50, 150, 120, 25);
+
+        messageLabel.setBounds(50, 250, 350, 35);
+        messageLabel.setFont(new Font(null, Font.ITALIC, 18));
+
+   
+        userIDField.setBounds(180, 100, 200, 25);
+        userPasswordField.setBounds(180, 150, 200, 25);
+
+       
+        loginButton.setBounds(80, 200, 100, 25);
+        loginButton.setFocusable(false);
+        loginButton.addActionListener(this);
+
+        resetButton.setBounds(200, 200, 100, 25);
+        resetButton.setFocusable(false);
+        resetButton.addActionListener(this);
+
+        registerButton.setBounds(150, 300, 120, 30);
+        registerButton.setFocusable(false);
+        registerButton.addActionListener(e -> {
+            frame.dispose();
+            new RegistrationPageClient(); 
+        });
+
+     
+        JPanel p1 = new JPanel();
+        p1.setBackground(new Color(0, 50, 0));
+        p1.setBounds(0, 0, 450, 70);
+        p1.setLayout(null);
+        frame.add(p1);
+
+        
+        
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setBounds(50, 200, 330, 40); 
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 0)); 
+        buttonPanel.add(loginButton);
+        buttonPanel.add(resetButton);
+        buttonPanel.add(registerButton);
+     
+        frame.add(userIDLabel);
+        frame.add(userPasswordLabel);
+        frame.add(messageLabel);
+        frame.add(userIDField);
+        frame.add(userPasswordField);
+        frame.add(buttonPanel); 
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(450, 700);
+        frame.setLocation(800,50);
+        frame.setLayout(null);
+        frame.setVisible(true);
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == resetButton) {
+            userIDField.setText("");
+            userPasswordField.setText("");
+        }
+
+        if (e.getSource() == loginButton) {
+            String userID = userIDField.getText().trim();
+            String password = new String(userPasswordField.getPassword());
+
+            if (userID.isEmpty() || password.isEmpty()) {
+                messageLabel.setForeground(Color.RED);
+                messageLabel.setText("Please fill all fields");
+                return;
+            }
+
+        
+            Document user = DatabaseHelperClient.getUserByUserIDAndPassword(userID, password);
+            if (user != null) {
+//                String username = user.getString("username");
+//                String email = user.getString("email");
+
+                messageLabel.setForeground(Color.GREEN);
+                messageLabel.setText("Login Successful!");
+
+                frame.dispose();
+                Client client = new Client();
+                client.startClient();
+            } else {
+                messageLabel.setForeground(Color.RED);
+                messageLabel.setText("Invalid username/email or password");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Clientlogin::new);
+    }
+}
