@@ -4,54 +4,39 @@ import java.awt.event.*;
 import java.util.regex.*;
 
 public class RegistrationPageClient implements ActionListener {
-    JFrame frame;
-    JTextField usernameField, emailField, fullNameField;
-    JPasswordField passwordField;
-    JButton registerBtn, cancelBtn, loginBtn;
+    private JFrame frame;
+    private JTextField usernameField, emailField, fullNameField;
+    private JPasswordField passwordField;
+    private JButton registerBtn, cancelBtn, loginBtn;
 
-    RegistrationPageClient() {
+    public RegistrationPageClient() {
+        initializeUI();
+    }
+
+    private void initializeUI() {
         frame = new JFrame("Register");
         frame.setSize(450, 550);
         frame.setLayout(null);
-        frame.setLocation(800,100);
+        frame.setLocation(800, 100);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setBackground(Color.WHITE);
 
-        // Header
         JLabel header = new JLabel("Create Account");
         header.setBounds(130, 20, 200, 30);
         header.setFont(new Font("Arial", Font.BOLD, 22));
         header.setForeground(new Color(0, 50, 100));
         frame.add(header);
 
-        // Username
-        JLabel usernameLabel = new JLabel("Username:");
-        usernameLabel.setBounds(50, 80, 100, 25);
-        frame.add(usernameLabel);
+    
+        addLabelAndField("Username:", 80, usernameField = new JTextField(), 80);
 
-        usernameField = new JTextField();
-        usernameField.setBounds(160, 80, 220, 25);
-        frame.add(usernameField);
+        
+        addLabelAndField("Full Name:", 130, fullNameField = new JTextField(), 130);
 
-        // Full Name
-        JLabel fullNameLabel = new JLabel("Full Name:");
-        fullNameLabel.setBounds(50, 130, 100, 25);
-        frame.add(fullNameLabel);
+     
+        addLabelAndField("Email:", 180, emailField = new JTextField(), 180);
 
-        fullNameField = new JTextField();
-        fullNameField.setBounds(160, 130, 220, 25);
-        frame.add(fullNameField);
-
-        // Email
-        JLabel emailLabel = new JLabel("Email:");
-        emailLabel.setBounds(50, 180, 100, 25);
-        frame.add(emailLabel);
-
-        emailField = new JTextField();
-        emailField.setBounds(160, 180, 220, 25);
-        frame.add(emailField);
-
-        // Password
+   
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setBounds(50, 230, 100, 25);
         frame.add(passwordLabel);
@@ -60,42 +45,45 @@ public class RegistrationPageClient implements ActionListener {
         passwordField.setBounds(160, 230, 220, 25);
         frame.add(passwordField);
 
-        // Register Button
-        registerBtn = new JButton("Register");
-        registerBtn.setBounds(80, 300, 120, 35);
-        registerBtn.setBackground(new Color(0, 50, 100));
-        registerBtn.setForeground(Color.WHITE);
-        registerBtn.setFocusPainted(false);
-        registerBtn.addActionListener(this);
+     
+        registerBtn = createButton("Register", 80, 300, 120, 35, 
+                                 new Color(0, 50, 100), this);
         frame.add(registerBtn);
 
-        // Cancel Button
-        cancelBtn = new JButton("Cancel");
-        cancelBtn.setBounds(220, 300, 120, 35);
-        cancelBtn.setBackground(Color.LIGHT_GRAY);
-        cancelBtn.setForeground(Color.BLACK);
-        cancelBtn.setFocusPainted(false);
-        cancelBtn.addActionListener(e -> frame.dispose());
+     
+        cancelBtn = createButton("Cancel", 220, 300, 120, 35, 
+                               Color.LIGHT_GRAY, e -> frame.dispose());
         frame.add(cancelBtn);
 
-        // Login Button
-        
-        
-        
-        
-        loginBtn = new JButton("Already have an account? Login");
-        loginBtn.setBounds(80, 360, 260, 35);
-        loginBtn.setBackground(new Color(70, 130, 180));
-        loginBtn.setForeground(Color.WHITE);
-        loginBtn.setFocusPainted(false);
-//        loginBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        loginBtn.addActionListener(e -> {
+      
+        loginBtn = createButton("Already have an account? Login", 80, 360, 260, 35, 
+                              new Color(70, 130, 180), e -> {
             frame.dispose();
             new Clientlogin(); 
         });
         frame.add(loginBtn);
 
         frame.setVisible(true);
+    }
+
+    private void addLabelAndField(String labelText, int yPos, JTextField field, int fieldYPos) {
+        JLabel label = new JLabel(labelText);
+        label.setBounds(50, yPos, 100, 25);
+        frame.add(label);
+
+        field.setBounds(160, fieldYPos, 220, 25);
+        frame.add(field);
+    }
+
+    private JButton createButton(String text, int x, int y, int width, int height, 
+                               Color bgColor, ActionListener listener) {
+        JButton button = new JButton(text);
+        button.setBounds(x, y, width, height);
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.addActionListener(listener);
+        return button;
     }
 
     @Override
@@ -105,31 +93,43 @@ public class RegistrationPageClient implements ActionListener {
         String email = emailField.getText().trim();
         String password = new String(passwordField.getPassword());
 
-        // Validation
-        if (username.isEmpty() || fullName.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Please fill all fields", "Error", JOptionPane.ERROR_MESSAGE);
+        if (!validateInputs(username, fullName, email, password)) {
             return;
         }
 
-        if (!isValidEmail(email)) {
-            JOptionPane.showMessageDialog(frame, "Enter a valid email", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (password.length() < 6) {
-            JOptionPane.showMessageDialog(frame, "Password must be at least 6 characters", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-     
         boolean success = DatabaseHelperClient.insertUser(username, fullName, email, password);
         if (success) {
-            JOptionPane.showMessageDialog(frame, "Registration successful!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Registration successful!", "Success", 
+                                        JOptionPane.INFORMATION_MESSAGE);
             frame.dispose();
             new Client(); 
         } else {
-            JOptionPane.showMessageDialog(frame, "Error connecting to database!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Registration failed. Username or email may already exist.", 
+                                          "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private boolean validateInputs(String username, String fullName, String email, String password) {
+        if (username.isEmpty() || fullName.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            showError("Please fill all fields");
+            return false;
+        }
+
+        if (!isValidEmail(email)) {
+            showError("Enter a valid email");
+            return false;
+        }
+
+        if (password.length() < 6) {
+            showError("Password must be at least 6 characters");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private boolean isValidEmail(String email) {
@@ -138,6 +138,6 @@ public class RegistrationPageClient implements ActionListener {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(RegistrationPageClient::new);
+        SwingUtilities.invokeLater(() -> new RegistrationPageClient());
     }
 }

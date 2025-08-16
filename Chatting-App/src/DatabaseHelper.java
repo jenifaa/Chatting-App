@@ -27,7 +27,7 @@ public class DatabaseHelper {
         }
     }
 
-    // Insert user into MongoDB
+    
     public static boolean insertUser(String username, String fullName, String email, String password) {
         String connectionString = getConnectionString();
         if (connectionString == null) return false;
@@ -36,7 +36,7 @@ public class DatabaseHelper {
             MongoDatabase database = mongoClient.getDatabase(DATABASE_NAME);
             MongoCollection<Document> collection = database.getCollection("users");
 
-            // Check if email already exists
+           
             Document existing = collection.find(new Document("email", email)).first();
             if (existing != null) {
                 System.out.println("Email already registered!");
